@@ -1,0 +1,55 @@
+---
+title: "IndiaGeoData"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(rgdal)        #Geospatial library for R
+library(ggplot2)
+library(wesanderson)
+library(RColorBrewer)
+```
+
+```{r}
+setwd("~/Desktop/DAV/India_Geodata")
+maindir="~/Desktop/DAV/India_Geodata"
+paste(maindir,'/IND_adm',sep='')
+ind_adm_0= readOGR(paste(maindir,'/IND_adm',sep=''),'IND_adm0')
+ind_adm_1= readOGR(paste(maindir,'/IND_adm',sep=''),'IND_adm1')
+ind_adm_2= readOGR(paste(maindir,'/IND_adm',sep=''),'IND_adm2')
+ind_adm_3= readOGR(paste(maindir,'/IND_adm',sep=''),'IND_adm3')
+ind_rds= readOGR(paste(maindir,'/IND_rds',sep=''),'IND_roads')
+
+ggplot() + geom_polygon(data=ind_adm_0,aes(x=long, y=lat,group=group), fill='white', col=rgb(0,0,0.3,alpha = 0.3)) + 
+  geom_path(data=ind_rds, aes(x=long, y=lat, group=group), col='red') + 
+  coord_fixed()
+ + labs(title= 'India- Road Networks', x='',y='')
+
+```
+
+
+```{r}
+# Railway Network
+ind_rwy= readOGR(paste(maindir,'/IND_rrd',sep=''),'IND_rails')
+ind_adm_0= readOGR(paste(maindir,'/IND_adm',sep=''),'IND_adm0')
+ggplot() + geom_polygon(data=ind_adm_0,aes(x=long, y=lat,group=group), fill='white', col=rgb(0,0,0.3,alpha = 0.3)) + 
+  geom_path(data=ind_rwy, aes(x=long, y=lat, group=group), col='green') + 
+  coord_fixed() + 
+  labs(title= 'Indian Railway Network', x='', y='')
+```
+```{r}
+# Indian water Lines and water areas 
+
+ind_adm_0= readOGR(paste(maindir,'/IND_adm',sep=''),'IND_adm0') #outline
+ind_waterlines=readOGR(paste(maindir,'/IND_wat',sep=''),'IND_water_lines_dcw')
+ind_waterareas=readOGR(paste(maindir,'/IND_wat',sep=''),'IND_water_areas_dcw')
+
+ggplot() + geom_polygon(data=ind_adm_0,aes(x=long, y=lat,group=group), fill='white', col=rgb(0,0,0.3,alpha = 0.3)) + 
+  geom_path(data=ind_waterlines, aes(x=long, y=lat,group=group), col=rgb(0,0,0.5,alpha=0.1)) + 
+  #geom_polygon(data=ind_waterareas, aes(x=long, y=lat,group=group), fill="#618A98", size=0) + 
+  coord_fixed() + 
+  labs(title= 'Indian Water Line and Areas', x='', y='')
+
+```
+
